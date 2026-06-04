@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QuartzPad Firmware Installer</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; background:#101010;
+           color:#eee; margin:0; min-height:100vh; display:flex;
+           align-items:center; justify-content:center; text-align:center; }
+    .card { max-width: 560px; padding: 40px 32px; }
+    h1 { margin: 0 0 6px; font-size: 40px; }
+    .sub { color:#aaa; margin: 0 0 24px; }
+    ol { text-align:left; color:#ccc; line-height:1.7; display:inline-block; }
+    esp-web-install-button { margin-top: 16px; }
+    .note { font-size: 13px; color:#888; margin-top: 28px; line-height:1.5; }
+    a { color:#4CAF50; }
+  </style>
+  <!-- ESP Web Tools. Uses the browser Web Serial API (Chrome/Edge). -->
+  <script type="module"
+    src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js"></script>
+</head>
+<body>
+  <div class="card">
+    <h1>QuartzPad</h1>
+    <p class="sub">Install the firmware onto your M5Stack&nbsp;Tab5.</p>
+    <ol>
+      <li>Open this page in <b>Google&nbsp;Chrome</b> or <b>Microsoft&nbsp;Edge</b> on a computer.</li>
+      <li>Connect the Tab5 with a USB-C data cable.</li>
+      <li>Click <b>Install</b>, then choose the Tab5's serial port.</li>
+    </ol>
+    <br />
+    <esp-web-install-button manifest="manifest.json">
+      <button slot="activate">Install QuartzPad</button>
+      <span slot="unsupported">Your browser can't flash here — use desktop Chrome or Edge.</span>
+      <span slot="not-allowed">Serial access was blocked. Allow it and reload.</span>
+    </esp-web-install-button>
+
+    <p class="note">
+      Not detected? Hold the Tab5's <b>RESET</b> button for ~2&nbsp;seconds
+      (until the green LED flashes fast) to force download mode, then click
+      Install again.
+    </p>
+  </div>
+</body>
+</html>
