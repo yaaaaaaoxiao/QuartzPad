@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QuartzPad — Firmware Installer</title>
+  <meta name="description" content="Install QuartzPad firmware on the M5Stack Tab5 directly from your browser." />
+  <style>
+    :root {
+      --bg: #000000;
+      --panel: #2C2C2E;
+      --panel-border: #4A4A4C;
+      --green: #60BE54;
+      --green-border: #3E7A33;
+      --red: #EB4C46;
+      --text: #FFFFFF;
+      --muted: #AAAAAA;
+      --dim: #808080;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg); color: var(--text);
+      margin: 0; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 32px 16px;
+    }
+    .card { max-width: 640px; width: 100%; text-align: center; }
+
+    h1 { margin: 0; font-size: 48px; letter-spacing: 0.5px; }
+    .version {
+      display: inline-block; margin: 10px 0 4px;
+      padding: 4px 16px; border: 2px solid var(--panel-border);
+      border-radius: 999px; color: var(--muted); font-size: 14px;
+    }
+    .sub { color: var(--muted); margin: 8px 0 28px; font-size: 17px; }
+
+    .steps {
+      text-align: left; margin: 0 auto 28px; padding: 20px 28px;
+      background: var(--panel); border: 2px solid var(--panel-border);
+      border-radius: 18px; max-width: 520px;
+    }
+    .steps ol { margin: 0; padding-left: 22px; color: #ddd; line-height: 1.9; }
+    .steps b { color: var(--text); }
+
+    /* The actual install button (slotted into esp-web-tools) */
+    esp-web-install-button { display: inline-block; }
+    button.install {
+      font: inherit; font-size: 20px; font-weight: 600;
+      color: var(--text); background: var(--green);
+      border: 3px solid var(--green-border); border-radius: 16px;
+      padding: 18px 56px; cursor: pointer;
+    }
+    button.install:hover { filter: brightness(1.08); }
+    button.install:active { filter: brightness(0.92); }
+    .slot-msg { color: var(--red); font-size: 15px; }
+
+    details {
+      margin: 30px auto 0; max-width: 520px; text-align: left;
+      color: var(--muted); font-size: 14px; line-height: 1.6;
+    }
+    details summary { cursor: pointer; color: #ccc; font-size: 15px; padding: 6px 0; }
+    details li { margin-bottom: 8px; }
+    .warn { color: var(--red); }
+    footer { margin-top: 36px; color: var(--dim); font-size: 12px; }
+    a { color: var(--green); }
+  </style>
+  <!-- ESP Web Tools (Web Serial flasher). Major-version pinned so ESP32-P4
+       support fixes arrive automatically without breaking changes. -->
+  <script type="module"
+    src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js"></script>
+</head>
+<body>
+  <div class="card">
+    <h1>QuartzPad</h1>
+    <div class="version" id="ver">v…</div>
+    <p class="sub">6-minute walk-test timer for the M5Stack&nbsp;Tab5.<br/>
+      Install the firmware directly from this page — nothing to download.</p>
+
+    <div class="steps">
+      <ol>
+        <li>Use <b>Google Chrome</b> or <b>Microsoft Edge</b> on a computer.</li>
+        <li>Connect the Tab5 with a <b>USB-C data cable</b>.</li>
+        <li>Click <b>Install</b> below and pick the Tab5's serial port.</li>
+        <li>Keep the cable connected until it says <b>Installation complete</b>.</li>
+      </ol>
+    </div>
+
+    <esp-web-install-button manifest="manifest.json">
+      <button class="install" slot="activate">Install QuartzPad</button>
+      <span class="slot-msg" slot="unsupported">
+        This browser can't flash devices — open this page in desktop Chrome or Edge.
+      </span>
+      <span class="slot-msg" slot="not-allowed">
+        Serial access was blocked — allow it and reload the page.
+      </span>
+    </esp-web-install-button>
+
+    <details>
+      <summary>Troubleshooting</summary>
+      <ul>
+        <li><b>No device in the port list?</b> Make sure the USB-C cable carries
+            data (some only charge). Try another port or cable.</li>
+        <li><b>Connecting fails or times out?</b> Force download mode: hold the
+            Tab5's <b>RESET</b> button about 2 seconds until the internal green
+            LED flashes rapidly, then click Install again.</li>
+        <li><b>"Chip family not supported"?</b> Reload the page (the flasher
+            library updates itself). If it persists, install with
+            <a href="https://docs.m5stack.com/en/download" target="_blank" rel="noopener">M5Burner</a>
+            instead.</li>
+        <li class="warn"><b>Installing erases the device</b> — saved sessions
+            and settings on the Tab5 are reset.</li>
+        <li>After flashing, the Tab5 reboots into QuartzPad automatically.</li>
+      </ul>
+    </details>
+
+    <footer>
+      QuartzPad firmware installer · works in desktop Chrome &amp; Edge ·
+      powered by <a href="https://esphome.github.io/esp-web-tools/" target="_blank" rel="noopener">ESP&nbsp;Web&nbsp;Tools</a>
+    </footer>
+  </div>
+
+  <script>
+    // Show the firmware version from the manifest so the page can't drift
+    // out of sync with what it installs.
+    fetch('manifest.json').then(r => r.json())
+      .then(m => { document.getElementById('ver').textContent = 'v' + m.version; })
+      .catch(() => { document.getElementById('ver').textContent = ''; });
+  </script>
+</body>
+</html>
